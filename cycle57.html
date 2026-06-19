@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes — Life-OS Architecture (cycle 57 FINAL)</title>
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#121826; --panel2:#161e2e; --ink:#e6edf3; --dim:#8b97a8;
+    --line:#243049; --accent:#6ea8fe; --keystone:#ffd166; --new:#ff7b72; --exists:#3fb950;
+    --wire:#d29922; --template:#a371f7; --money:#3fb950; --safety:#ff9e64;
+    --t1:#6ea8fe; --t2:#7ee787; --t3:#79c0ff; --muscle:#c9a0ff; --svc:#56d4dd; --exec:#ffd166;
+    --radius:12px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#16203a 0%,var(--bg) 60%);
+    color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;padding:28px}
+  .wrap{max-width:1180px;margin:0 auto}
+  header.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin-bottom:6px}
+  h1{font-size:26px;margin:0;letter-spacing:.3px}
+  h1 .g{background:linear-gradient(90deg,#6ea8fe,#7ee787,#ffd166);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--dim);font-size:13px;max-width:760px;margin:2px 0 4px}
+  .pill{font-size:11px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);color:var(--dim);white-space:nowrap}
+  .pill.ok{color:var(--exists);border-color:#1f5132;background:#0f2417}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 18px}
+  .lg{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+  .dot{width:9px;height:9px;border-radius:3px;display:inline-block}
+  .layer{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:var(--radius);padding:14px 16px;margin:10px 0;position:relative}
+  .layer > .tag{position:absolute;top:-10px;left:14px;font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--dim);background:var(--bg);padding:1px 8px;border:1px solid var(--line);border-radius:6px}
+  .flow{display:flex;justify-content:center;color:var(--dim);font-size:18px;margin:-2px 0}
+  .you{display:flex;justify-content:center;gap:10px;margin-bottom:4px}
+  .you .chip{border:1px dashed #2b3a57;border-radius:999px;padding:6px 16px;color:var(--accent);font-weight:600}
+  .master{border-color:#274a86;background:linear-gradient(180deg,#13203c,#101a30)}
+  .master h2{margin:0 0 4px;font-size:17px;color:var(--t1)}
+  .row{display:flex;flex-wrap:wrap;gap:10px}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+  .mini{border:1px solid var(--line);border-radius:9px;padding:9px 11px;background:#0e1626}
+  .mini b{color:var(--ink)} .mini small{color:var(--dim)}
+  .keystone{border:1.5px solid var(--keystone);background:linear-gradient(180deg,#2a2410,#1a1708);text-align:center}
+  .keystone h3{margin:0 0 2px;color:var(--keystone);font-size:15px}
+  .keystone small{color:#d8c79a}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px}
+  .card{border:1px solid var(--line);border-radius:10px;padding:10px 11px;background:#0e1626;transition:.15s;position:relative}
+  .card:hover{transform:translateY(-2px);border-color:#35507f;box-shadow:0 6px 18px #0006}
+  .card h4{margin:0 0 3px;font-size:13.5px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+  .card p{margin:0;color:var(--dim);font-size:11.5px;line-height:1.45}
+  .badge{font-size:9px;font-weight:700;letter-spacing:.4px;padding:2px 6px;border-radius:5px;white-space:nowrap}
+  .b-exists{color:#0c1f12;background:var(--exists)} .b-new{color:#2a0d0a;background:var(--new)}
+  .b-wire{color:#2a1e05;background:var(--wire)} .b-tmpl{color:#1c0f2e;background:var(--template)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .ch{border:1px solid #2a3b5c;border-radius:999px;padding:5px 11px;font-size:12px;background:#0e1626;color:var(--t3)}
+  .ch.cold{border-color:#3a2d55;color:#c9b3ff}
+  .muscles .ch{color:var(--muscle);border-color:#3a2f5c}
+  .bands{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:760px){.bands,.split{grid-template-columns:1fr}}
+  .band h3{margin:0 0 8px;font-size:13px;letter-spacing:.5px;text-transform:uppercase}
+  .svc h3{color:var(--svc)} .exec h3{color:var(--exec)}
+  .list{display:flex;flex-direction:column;gap:7px}
+  .li{border:1px solid var(--line);border-radius:8px;padding:7px 10px;background:#0e1626;font-size:12px}
+  .li b{color:var(--ink)} .li span{color:var(--dim)}
+  .auto{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .lv{flex:1;min-width:120px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;background:#0e1626;font-size:11px}
+  .lv b{display:block;color:var(--ink);font-size:11.5px}
+  .lv.deny{border-color:#5a1f1f;background:#1f0e0e} .lv.confirm{border-color:#5a4a1f;background:#1c170a}
+  .lv.auto1{border-color:#1f4a2f;background:#0e1c14}
+  .steps{display:flex;flex-wrap:wrap;gap:7px;counter-reset:s}
+  .step{flex:1;min-width:150px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:#0e1626;font-size:11.5px;position:relative}
+  .step::before{counter-increment:s;content:counter(s);position:absolute;top:-9px;left:9px;background:var(--accent);color:#06101f;
+    font-weight:700;font-size:10px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center}
+  .step b{color:var(--ink)} .step span{color:var(--dim)}
+  footer{margin-top:18px;color:var(--dim);font-size:11.5px;border-top:1px solid var(--line);padding-top:12px}
+  .kbd{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#a9c2ff;background:#0e1830;border:1px solid #21345c;border-radius:5px;padding:1px 6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>HERMES <span class="g">— Life-OS Architecture</span></h1>
+    <span class="pill ok">cycle 57 · FINAL · survived 3 red-team waves + neutrality</span>
+  </header>
+  <p class="sub">One always-on, text- and voice-reachable partner that replaces Claude for <b>all</b> Jaden's work and autonomously makes money. You talk to the Master; it routes to the right specialist; specialists use reusable functions; muscles do the work — over a safety keel + value engine. <span style="color:var(--dim)">Standard: best = every aspect maximized <i>together</i>.</span></p>
+
+  <div class="legend">
+    <span class="lg"><span class="dot" style="background:var(--exists)"></span>EXISTS &amp; live</span>
+    <span class="lg"><span class="dot" style="background:var(--wire)"></span>WIRE / graduate (shadow→enforce)</span>
+    <span class="lg"><span class="dot" style="background:var(--template)"></span>TEMPLATE → instantiate</span>
+    <span class="lg"><span class="dot" style="background:var(--new)"></span>NEW build</span>
+    <span class="lg"><span class="dot" style="background:var(--keystone)"></span>keystone (the missing piece)</span>
+  </div>
+
+  <!-- INTERFACE -->
+  <div class="you">
+    <span class="chip">📱 You — text</span>
+    <span class="chip">🎙️ You — voice</span>
+  </div>
+  <div class="flow">▼</div>
+
+  <!-- TIER 1 MASTER -->
+  <div class="layer master">
+    <span class="tag">Tier 1 · Master</span>
+    <h2>“Jarvis” — the everyday agent (the only always-on reasoner)</h2>
+    <p class="sub" style="margin:0">gpt-5.5 brain. Reconstructs your message → handles small tasks itself → for bigger ones, decides who owns it. Stays thin (routes + pointers; never holds a specialist's working context).</p>
+    <div class="split">
+      <div class="mini"><b>⚡ Fast-Path</b> <small>— continued conversation in a warm domain bypasses routing + gates → near-instant partner feel</small></div>
+      <div class="mini"><b>🧭 Slow-Path</b> <small>— new / high-risk / overnight work → full router → keel → quality-gate DAG</small></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <div class="mini" style="flex:1"><b>T0</b> <small>tiny → in-house</small></div>
+      <div class="mini" style="flex:1"><b>T1</b> <small>single-domain → route</small></div>
+      <div class="mini" style="flex:1"><b>T2</b> <small>cross-domain → decompose + orchestrate</small></div>
+    </div>
+  </div>
+  <div class="flow">▼</div>
+
+  <!-- KEYSTONE -->
+  <div class="layer keystone">
+    <span class="tag" style="color:var(--keystone);border-color:#5a4a1f">Keystone · NEW</span>
+    <h3>★ Profile-Router — “which specialist owns this?”</h3>
+    <small>The #1 missing piece today (the 7 profiles are siloed). Cheap classifier (Gemini Flash) + deterministic fallback → General-worker on low confidence. Runs <b>shadow-first</b> (compare vs default) → enforce on low-risk routing once it beats it. Sits <i>above</i> the existing engine-router.</small>
+  </div>
+  <div class="flow">▼</div>
+
+  <!-- TIER 2 DOMAINS -->
+  <div class="layer">
+    <span class="tag">Tier 2 · Domain specialists (deep project context; lean &amp; isolated; dormant until routed-to)</span>
+    <div class="grid">
+      <div class="card"><h4>Venture <span class="badge b-exists">EXISTS</span></h4><p>Social content / replication pipeline (orchestrates; dispatches execution).</p></div>
+      <div class="card"><h4>Trading <span class="badge b-new">NEW</span></h4><p>Markets analysis + paper-trading; live = manual-confirm, gated, deferred. A main money pillar.</p></div>
+      <div class="card"><h4>Product / Commerce <span class="badge b-exists">EXISTS</span></h4><p>Deal-finding + price history + vendor trust; deterministic scoring (<span style="color:#8b97a8">product</span>).</p></div>
+      <div class="card"><h4>Client-AI-Setup <span class="badge b-exists">EXISTS</span></h4><p>The paid AI-setup business + family-as-client. Free pilot live.</p></div>
+      <div class="card"><h4>Research <span class="badge b-exists">EXISTS</span></h4><p>Standing deep investigations + evidence. Uses the Deep-Research function.</p></div>
+      <div class="card"><h4>Learning &amp; Academics <span class="badge b-wire">WIDEN</span></h4><p>UVic coursework + first-class self-directed AI/ML learning + study-guide generation.</p></div>
+      <div class="card"><h4>Software / Eng &amp; Infra <span class="badge b-new">NEW</span></h4><p>Apps/web/scraping/automation + IT/cyber/home-lab + AI-PC builds + local-LLM infra + custom SW (punch-counter).</p></div>
+      <div class="card"><h4>Personal / Life-Ops <span class="badge b-tmpl">TEMPLATE</span></h4><p>Schedule/health/workout + comms intent + preemptive artifacts + financial maintenance (cost-savings).</p></div>
+      <div class="card"><h4>Gaming <span class="badge b-exists">EXISTS</span></h4><p>Automation + min-max (thin / on-demand; low priority).</p></div>
+      <div class="card"><h4>Steward <span class="badge b-wire">META</span></h4><p>Self-maintenance. LLM audits OFF until the orchestration proof is green.</p></div>
+      <div class="card"><h4>General worker <span class="badge b-exists">—</span></h4><p>Long-tail / novel asks — no standing domain (avoids near-empty profiles).</p></div>
+    </div>
+  </div>
+  <div class="flow">▼ pull functions sideways · escalate only if it earns it</div>
+
+  <!-- TIER 3 FUNCTIONS -->
+  <div class="layer">
+    <span class="tag">Tier 3 · Functions (reusable “how” — lazy skill-packs; first-class)</span>
+    <div class="chips">
+      <span class="ch">Deep-Research</span><span class="ch">Build / Codegen</span><span class="ch">Deal-Hunting</span>
+      <span class="ch">Web-Scraping</span><span class="ch">Comms-Execution</span><span class="ch">Learn-Fast</span>
+      <span class="ch cold">Red-Team / Audit ❄ always cold</span><span class="ch">Writing / Analysis</span>
+    </div>
+    <p class="sub" style="margin:8px 0 0">Default: the muscle runs the pack <i>inside</i> the domain context (no extra hop). A separate context spawns only for heavy fan-out / big corpus / credential isolation / fully-independent work — and is kept <b>warm</b> so the verify→rework loop re-enters it cheaply.</p>
+  </div>
+  <div class="flow">▼</div>
+
+  <!-- MUSCLES -->
+  <div class="layer muscles">
+    <span class="tag">Muscles · engine-router picks model/effort/prompt per job</span>
+    <div class="chips">
+      <span class="ch">Claude Code</span><span class="ch">Codex</span><span class="ch">Gemini / agy</span>
+      <span class="ch">Opus 4.8</span><span class="ch">NotebookLM</span><span class="ch">Local LLMs ›later</span>
+    </div>
+    <p class="sub" style="margin:8px 0 0">Full cost ladder: <b>nano / flash-lite</b> (cheapest — <span style="color:var(--new)">NEW: add to active routing</span>) → flash → Pro / gpt-5.5 → Opus → Nous overflow. Cheapest-that-clears-the-bar per task.</p>
+  </div>
+
+  <!-- CROSS-CUTTING BANDS -->
+  <div class="bands" style="margin-top:14px">
+    <div class="layer band svc">
+      <span class="tag" style="color:var(--svc);border-color:#1d4a4f">Cross-cutting · Services &amp; Safety keel</span>
+      <h3>Services &amp; Keel</h3>
+      <div class="list">
+        <div class="li"><b>Actuation Contract Layer</b> <span>— typed “safe hands” per action (the model proposes intent; never builds the final email/payment/order call) <span class="badge b-new" style="font-size:8px">NEW</span></span></div>
+        <div class="li"><b>Engine / model / effort router</b> <span>— cycle-56, live <span class="badge b-exists" style="font-size:8px">EXISTS</span></span></div>
+        <div class="li"><b>Memory + cross-domain world-model</b> <span>— active participant (kills siloed amnesia; real “surprise” = cross-domain synthesis)</span></div>
+        <div class="li"><b>Credential Broker</b> <span>— point-of-use injection, never a “credentials profile” (secrets never in a reasoning context)</span></div>
+        <div class="li"><b>Anti-drift keel</b> <span>— autonomy_allowed(project): act autonomously only if provably on-scope <span class="badge b-wire" style="font-size:8px">WIRE</span></span></div>
+        <div class="li"><b>Approval queue · Self-healing · Goal-Scheduler · Observability</b></div>
+        <div class="li"><b>Vault ↔ Hermes</b> <span>= vault_rag (verify/wire) + world-model. NotebookLM = curated canon + bulk reads (not the general vault bridge).</span></div>
+      </div>
+    </div>
+    <div class="layer band exec">
+      <span class="tag" style="color:var(--exec);border-color:#5a4a1f">Cross-cutting · Execution &amp; value</span>
+      <h3>Execution / Value</h3>
+      <div class="list">
+        <div class="li"><b>💰 Money engine = REAL revenue</b> <span>— businesses / products / apps / software / trading / productized services / study-guides + ROI ledger. <i>Cost-cutting ≠ money-making</i> (that's Life-Ops maintenance).</span></div>
+        <div class="li"><b>🔮 Preemptive engine</b> <span>— infers candidate goals from your life → value-gate → low-risk auto / high-risk approval → “surprise additions.” Cross-domain, not a cron. <span class="badge b-new" style="font-size:8px">NEW</span></span></div>
+        <div class="li"><b>✅ Quality gate (deterministic)</b> <span>— tests / CI / live-probe / evidence; verifies the artifact, not the self-report. Per-domain standards. Anti-mediocrity + overnight-delusion guard.</span></div>
+        <div class="li"><b>🔁 Test-driven loop</b> <span>— auto-test → judge every aspect vs purpose → iterate even on a pass to polish → move on. Preemptive autonomy is <i>earned</i> by tests.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTONOMY -->
+  <div class="layer">
+    <span class="tag">Autonomy · L0–L5 (graded — never paralyses a proactive agent)</span>
+    <div class="auto">
+      <div class="lv auto1"><b>L0 Observe</b>always allowed</div>
+      <div class="lv auto1"><b>L1 Self / draft</b>allowed · drift-lite (read canon, label draft)</div>
+      <div class="lv"><b>L2 Act-in-playbook</b>silent in-playbook · keel + quality gate</div>
+      <div class="lv confirm"><b>L3 Consequential</b>single-confirm (trade, send, payment)</div>
+      <div class="lv confirm"><b>L4 High-stakes</b>confirm + machine check</div>
+      <div class="lv deny"><b>L5 Forbidden</b>hard-deny (auto-posting)</div>
+    </div>
+  </div>
+
+  <!-- BUILD ORDER -->
+  <div class="layer">
+    <span class="tag">Build order · dogfood &amp; prove-the-loop first → graduate governance → risky autonomy last</span>
+    <div class="steps">
+      <div class="step"><b>Actuation layer</b> <span>typed safe-hands first</span></div>
+      <div class="step"><b>Router (shadow) + fast/slow + warm loop</b> <span>prove the partner UX on 1 domain, dogfooded</span></div>
+      <div class="step"><b>Quality + drift gates enforce</b> <span>per-domain + numeric thresholds</span></div>
+      <div class="step"><b>Broker + Life-Ops + Money ledger</b> <span>real data + real revenue</span></div>
+      <div class="step"><b>Active world-model</b> <span>cross-domain synthesis</span></div>
+      <div class="step"><b>Preemptive engine</b> <span>goal-inference + overnight</span></div>
+      <div class="step"><b>Trading (paper) + Software/AI-PC + local LLM</b></div>
+      <div class="step"><b>Full Steward + advanced voice + Mom's Hermes</b> <span>(same factory; last)</span></div>
+    </div>
+  </div>
+
+  <footer>
+    <b>How this was decided:</b> source scope (read in full) → Codex plan-check + Gemini convergence → v1 → <b>RT-1</b> (3 critics) → v2 → <b>RT-2</b> (3 critics, + feasibility audit) → FINAL → <b>RT-3</b> two-way (robust + fresh-neutrality) → final hardening pass. 8 independent Codex/Gemini critics; neutrality wave confirmed the design stayed true to the scope and never decreased it. Engines: <span class="kbd">codex</span> + <span class="kbd">agy/gemini</span>, ~$0. &nbsp;·&nbsp; Full detail: <span class="kbd">ARCH-PLAN-FINAL.md</span>. &nbsp;·&nbsp; Nothing is built — this is the architecture for approval; the build is a separate plan.
+  </footer>
+
+</div>
+</body>
+</html>

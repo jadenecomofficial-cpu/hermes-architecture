@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes — 3-Tier Always-On Orchestrator</title>
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#11151f; --ink:#e6e9ef; --dim:#8b93a7;
+    --master:#f0a35e; --domain:#5ab0f0; --func:#7ee0a8; --muscle:#c98cf0; --disk:#e0c46a;
+    --line:#2a3140; --card:#161b27;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:28px 24px 40px}
+  h1{font-size:20px;font-weight:650;letter-spacing:.2px}
+  h1 small{color:var(--dim);font-weight:400;font-size:13px;display:block;margin-top:4px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .tier{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0;position:relative}
+  .tier-label{position:absolute;top:-10px;left:16px;background:var(--bg);padding:0 8px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700}
+  .tier-note{color:var(--dim);font-size:12px;margin-top:8px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 13px;flex:1;min-width:150px}
+  .card b{font-size:13.5px}
+  .card span{display:block;color:var(--dim);font-size:11.5px;margin-top:3px}
+  .master .tier-label{color:var(--master)} .master{border-color:#3a2c1c}
+  .domain .tier-label{color:var(--domain)} .func .tier-label{color:var(--func)}
+  .muscle .tier-label{color:var(--muscle)} .disk .tier-label{color:var(--disk)}
+  .master-box{background:linear-gradient(180deg,#1c1610,#12110d);border:1px solid #4a3719;border-radius:10px;padding:14px 16px}
+  .master-box b{color:var(--master);font-size:15px}
+  .pill{display:inline-block;background:#0d1018;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:11px;color:var(--dim);margin:4px 6px 0 0}
+  .flow{text-align:center;color:var(--dim);font-size:18px;margin:2px 0}
+  .muscle .card b{color:var(--muscle)} .disk .card b{color:var(--disk)}
+  .domain .card b{color:var(--domain)} .func .card b{color:var(--func)}
+  .legend{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .legend h2{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+  .principles{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px}
+  .principles div{font-size:12.5px;color:var(--ink)}
+  .principles b{color:var(--master)}
+  .example{margin-top:14px;background:#0d1018;border-left:3px solid var(--func);border-radius:6px;padding:10px 14px;font-size:12.5px;color:var(--dim)}
+  .example b{color:var(--ink)}
+  .arrow{color:#3a4150}
+  /* phone tightening: single-column principles + slimmer padding on narrow screens */
+  @media(max-width:620px){
+    body{padding:18px 14px 28px}
+    .principles{grid-template-columns:1fr}
+    .card{min-width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Hermes — 3-Tier Always-On Orchestrator
+    <small>"Jarvis" is the only always-on process. Everything below is spawned, used, and torn down on demand. Context is scratch; the filesystem is memory.</small>
+  </h1>
+
+  <div class="tier master">
+    <div class="tier-label">Tier 1 · Master (CEO)</div>
+    <div class="master-box">
+      <b>JARVIS — pure orchestration, always on</b>
+      <span class="pill">brain: gpt-5.5 · 272k · ChatGPT sub · $0 · separate quota</span>
+      <span class="pill">thin kernel only: routing identity + L0–L5 gates + delegation rule + memory INDEX (pointers, not bodies)</span>
+      <span class="pill">stays lean by CYCLING: work → write state to disk → respawn fresh (never fills enough to compress)</span>
+      <span class="pill">decides: which profile · effort (low→max) · which model</span>
+    </div>
+  </div>
+
+  <div class="flow">▼ routes the task ▼</div>
+
+  <div class="tier domain">
+    <div class="tier-label">Tier 2 · Domain Profiles (the WHAT / WHY)</div>
+    <div class="row">
+      <div class="card"><b>Venture</b><span>content / replication pipeline, FB+IG — orchestrates existing projects</span></div>
+      <div class="card"><b>Research</b><span>deep-research rigor + cataloguing</span></div>
+      <div class="card"><b>Client-AI-Setup</b><span>universal setup; family = a client</span></div>
+      <div class="card"><b>Gaming</b><span>generalized game automation</span></div>
+      <div class="card"><b>+ extensible</b><span>new vertical = new domain profile</span></div>
+    </div>
+    <div class="tier-note">Each: its OWN exact context (domain SOUL + only its skills/memory) · spawned on demand, kept warm only while active · knows lightly when to hand off to a peer domain.</div>
+  </div>
+
+  <div class="flow">▼ dispatches reusable work ▼</div>
+
+  <div class="tier func">
+    <div class="tier-label">Tier 3 · Function Profiles (the HOW — shared, composable)</div>
+    <div class="row">
+      <div class="card"><b>Builder / Programmer</b><span>builds frameworks, code, apps</span></div>
+      <div class="card"><b>Credentials / Signups</b><span>auth, accounts, API keys</span></div>
+      <div class="card"><b>Deep-Researcher</b><span>methodical multi-source research</span></div>
+      <div class="card"><b>+ extensible</b><span>new reusable capability = new function profile</span></div>
+    </div>
+    <div class="tier-note">Reusable how-to, composed across domains · chain laterally (research → build → credentials) · report distilled results back up.</div>
+  </div>
+
+  <div class="flow">▼ heavy work offloaded to engines ▼</div>
+
+  <div class="tier muscle">
+    <div class="tier-label">Muscles · Engines (not profiles)</div>
+    <div class="row">
+      <div class="card"><b>Claude Code</b><span>sustained coding</span></div>
+      <div class="card"><b>Codex</b><span>repo / terminal coding</span></div>
+      <div class="card"><b>Gemini / agy</b><span>2M-ctx reads + vision · separate Google quota</span></div>
+      <div class="card"><b>Opus 4.8</b><span>frontier reasoning · 1M ctx (on demand)</span></div>
+      <div class="card"><b>NotebookLM</b><span>bulk doc RAG · can't hallucinate</span></div>
+    </div>
+    <div class="tier-note">Profiles dispatch heavy reads / builds here; muscles do it in THEIR context and return a DISTILLED brief — a parent never holds what a child read.</div>
+  </div>
+
+  <div class="tier disk">
+    <div class="tier-label">Foundation · Filesystem = Long-Term Memory</div>
+    <div class="row">
+      <div class="card"><b>state.db</b><span>sessions / messages / costs</span></div>
+      <div class="card"><b>MD memory + SOULs</b><span>durable knowledge + protocols</span></div>
+      <div class="card"><b>Run charters</b><span>per-task frozen goal + state for clean respawn</span></div>
+      <div class="card"><b>reasoning_bank</b><span>learned patterns</span></div>
+    </div>
+    <div class="tier-note">Every tier reads the slice it needs, works, writes results back, and drops it from context. This + cycling = always-on WITHOUT fidelity-losing compaction.</div>
+  </div>
+
+  <div class="example">
+    <b>Worked example — "research autonomous AI trading, build a framework, sign me up for what it needs":</b><br>
+    Master → <b>Venture</b> (frames it) → <b>Deep-Researcher</b> gathers & distills → hands off to <b>Builder</b> (builds the framework) → hands off to <b>Credentials</b> (signups + auth) → each step's heavy lifting runs on a muscle, distilled briefs flow back up to Master.
+  </div>
+
+  <div class="legend">
+    <h2>Load-bearing principles</h2>
+    <div class="principles">
+      <div><b>Lean spawn.</b> A profile loads a tiny kernel + ONLY its domain skills — never the 9-skill fat load that burned 180k.</div>
+      <div><b>JIT skills.</b> Skills/protocols load just-in-time per task, not all-at-start.</div>
+      <div><b>Cycle, don't compress.</b> Long work → write to disk → respawn fresh, not lossy compaction.</div>
+      <div><b>Distilled briefs.</b> Children return verdicts (~2k), not raw reads (~60k+).</div>
+      <div><b>Effort + model routing.</b> Trivial → cheap/local; hard → frontier muscle. A trivial task shouldn't cost &gt;50k.</div>
+      <div><b>Cost-capped.</b> Bulk → Gemini/Codex/NotebookLM (~$0); never burn the Claude window 24/7.</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
