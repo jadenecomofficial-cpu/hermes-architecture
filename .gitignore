@@ -1,0 +1,5 @@
+_session-logs/
+*.build.html
+_fontface.css
+.playwright-mcp/
+*.png
